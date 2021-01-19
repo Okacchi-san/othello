@@ -1,8 +1,6 @@
-import vue from 'vue/dist/vue';
+import Vue from 'vue';
 import App from './components/App.vue';
 
-
-new vue({
-  el: '#app',
-  render: h => h(App)
-});
+new Vue({
+  render: h => h(App),
+}).$mount('#app');
