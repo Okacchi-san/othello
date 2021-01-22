@@ -47,8 +47,8 @@ export default {
 
     },
     getStone(x, y) {
-      console.log(this.stones[x-1][y-1])
-      return this.stones[x-1][y-1];
+      // console.log(this.stones[x-1][y-1])
+      return this.stones[x-1][y-1]; //Q1:ここが何をしているのかわからない
 
     },
     copyStone() {
@@ -57,13 +57,83 @@ export default {
     onStoneSet(x,y) {
 
       if(this.stones[x-1][y-1] === 0) {
+
         let newStones = this.copyStone();
         newStones[x-1][y-1] = this.currentStoneId;
         this.stones = newStones;
-        this.currentStoneId *= -1;
+        this.changeStone(x,y); //裏返し
+        this.currentStoneId *= -1; //Q2:ここが何をしているのかわからない
 
       }else{
         alert('すでに石が置かれています');
+      }
+    },
+    changeStone(x,y) {
+
+      let movingCollection = [
+        {x: -1, y: -1}, //左上
+        {x: 0, y: -1}, //上
+        {x: 1, y: -1}, //右上
+        {x: 1, y: 0}, //右
+        {x: 1, y: 1}, //右下
+        {x: 0, y: 1}, //下
+        {x: -1, y: 1}, //左下
+        {x: -1, y: 0} //左
+      ];
+
+      let baseX = x - 1;
+      let baseY = y - 1;
+      let changingStoneId = this.currentStoneId * -1; //相手の石の色
+
+      for(let i = 0; i < movingCollection.length; i++) {
+        
+        let moving = movingCollection[i];
+        
+        let checkingX = baseX;
+        let checkingY = baseY;
+        let changingPositions = []; //ひっくり返すかもしれない座標
+
+        innerLoop:
+          for(let j = 0; j < this.size; j++) {
+
+            checkingX += moving.x; //movingCollection[i]のx　初項:-1
+            checkingY += moving.y; //movingCollection[i]のy　初項:-1
+
+            if(checkingX < 0 ||
+                checkingY < 0 ||
+                checkingX >= this.size ||
+                checkingY >= this.size) {
+                
+                break innerLoop;
+            }
+            let checkingStoneId = this.stones[checkingX][checkingY];
+
+            if(checkingStoneId == this.currentStoneId) { //自色の場合
+
+              let newStones = this.copyStone();
+
+              for(let k = 0; k < changingPositions.length; k++) {
+                
+                let changingPosition = changingPositions[k];
+                let changingX = changingPosition.x;
+                let changingY = changingPosition.y;
+                newStones[changingX][changingY] = this.currentStoneId;
+              }
+
+              this.stones = newStones;
+              break innerLoop;
+
+            }else if(checkingStoneId == changingStoneId) { //相手色の場合
+              changingPositions.push({
+                x: checkingX,
+                y: checkingY
+              });
+
+            }else{
+
+              break innerLoop;
+            }
+          }
       }
     }
   },
