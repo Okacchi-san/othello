@@ -31,13 +31,34 @@ export default {
         
         if((Number(this.turn) % 2) != 0 ) {
           stones[yIndex][xIndex] = -1;
+          this.changeStone(yIndex,xIndex);
         }else{
           stones[yIndex][xIndex] = 1;
         }
         this.stones = stones;
         this.turn ++;
-        console.log(this.stones,this.turn)
+        // console.log(this.stones,this.turn)
+        // console.log(yIndex,xIndex)
       }
+    },
+    changeStone: function(yIndex,xIndex) {
+      //TODO : 置いた石の右側だけ調べてみる
+      // 右側に石がなく、番外に出た　何もしない
+      // 右側が相手の石　石の座標を配列に格納　
+      // 右側が自石　配列の長さが1以上の場合、配列の石を裏返す
+      let reverseStones = [];
+      let researchSize = this.size -1;
+      console.log(researchSize,xIndex)
+      // console.log(yIndex,xIndex)
+      for(let i = 1; i < this.size - xIndex; i++) {
+ 
+        if(this.stones[yIndex][xIndex + i] != this.stones[yIndex][xIndex]) {
+          reverseStones.push(this.stones[yIndex][xIndex + i]);
+        }else{
+          break;
+        }
+      }
+      console.log(reverseStones);
     }
   },
   created: function() {
