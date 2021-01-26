@@ -1,9 +1,9 @@
 <template>
   <div>
     <table>
-      <tr v-for="(y,yIndex) in size" :key="yIndex">
-        <td v-for="(x,xIndex) in size" :key="xIndex">
-          <Stone :type="-1"></Stone>
+      <tr v-for="(y,yIndex) of stones" :key="yIndex">
+        <td v-for="(x,xIndex) of stones" :key="xIndex" v-on:click="onSelect(yIndex,xIndex)">
+          <Stone :type="stones[yIndex][xIndex]"></Stone>
         </td>
       </tr>
     </table>
@@ -19,9 +19,38 @@ export default {
     return {
       size: 8,
       stones: [],
-      currentStoneId: -1 //先手は黒
+      turn: 1 //
     }
   },
+  methods: {
+    onSelect: function(yIndex,xIndex) {
+      if(this.stones[yIndex][xIndex] != 0) {
+        alert('すでに石が置かれています。')
+      }else{
+        let stones = JSON.parse(JSON.stringify(this.stones));
+        
+        if((Number(this.turn) % 2) != 0 ) {
+          stones[yIndex][xIndex] = -1;
+        }else{
+          stones[yIndex][xIndex] = 1;
+        }
+        this.stones = stones;
+        this.turn ++;
+        console.log(this.stones,this.turn)
+      }
+    }
+  },
+  created: function() {
+    const stones = [];
+    for(let y = 0; y < this.size; y++) {
+      const row = [];
+      for(let x = 0; x < this.size; x++) {
+        row.push(0)
+      }
+      stones.push(row);
+    }
+    this.stones = stones;
+  }
 };
 </script>
 
