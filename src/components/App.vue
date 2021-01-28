@@ -29,19 +29,9 @@ export default {
         //ガード説
         return;
       }
-        //TODO : splice
         
-        // let stones = JSON.parse(JSON.stringify(this.stones));
         this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-        // console.log(stones,stones[yIndex])
-        // if((Number(this.turn) % 2) !== 0 ) {
-        //   stones[yIndex][xIndex] = -1;
-        //   this.changeStone(yIndex,xIndex);
-        // }else{
-        //   stones[yIndex][xIndex] = 1;
-        // }
-        // this.stones = stones;
-        // this.changeStone(yIndex,xIndex);
+        this.changeStone(yIndex,xIndex);
         this.turn ++;
         // console.log(this.stones,this.turn)
         // console.log(yIndex,xIndex)
@@ -53,18 +43,22 @@ export default {
       // 右側が相手の石　石の座標を配列に格納　
       // 右側が自石　配列の長さが1以上の場合、配列の石を裏返す
       let reverseStones = [];
-      let researchSize = this.size -1;
-      console.log(researchSize,xIndex)
-      // console.log(yIndex,xIndex)
+      let flug = false;
       for(let i = 1; i < this.size - xIndex; i++) {
  
-        if(this.stones[yIndex][xIndex + i] != this.stones[yIndex][xIndex]) {
-          reverseStones.push(yIndex,xIndex + i);
+        if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
+          reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
         }else{
+          flug = true;
           break;
         }
       }
-      console.log(reverseStones);
+      if(flug) {
+        reverseStones.map(i => {
+
+          this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
+        })
+      }
     },
     getCurrentStone: function() {
       return this.turn % 2 !== 0 ? -1 : 1;
