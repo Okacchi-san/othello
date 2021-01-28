@@ -24,22 +24,28 @@ export default {
   },
   methods: {
     onSelect: function(yIndex,xIndex) {
-      if(this.stones[yIndex][xIndex] != 0) {
-        alert('すでに石が置かれています。')
-      }else{
-        let stones = JSON.parse(JSON.stringify(this.stones));
+      if(this.stones[yIndex][xIndex] !== 0) {
+        alert('すでに石が置かれています。');
+        //ガード説
+        return;
+      }
+        //TODO : splice
         
-        if((Number(this.turn) % 2) != 0 ) {
-          stones[yIndex][xIndex] = -1;
-          this.changeStone(yIndex,xIndex);
-        }else{
-          stones[yIndex][xIndex] = 1;
-        }
-        this.stones = stones;
+        // let stones = JSON.parse(JSON.stringify(this.stones));
+        this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
+        // console.log(stones,stones[yIndex])
+        // if((Number(this.turn) % 2) !== 0 ) {
+        //   stones[yIndex][xIndex] = -1;
+        //   this.changeStone(yIndex,xIndex);
+        // }else{
+        //   stones[yIndex][xIndex] = 1;
+        // }
+        // this.stones = stones;
+        // this.changeStone(yIndex,xIndex);
         this.turn ++;
         // console.log(this.stones,this.turn)
         // console.log(yIndex,xIndex)
-      }
+      
     },
     changeStone: function(yIndex,xIndex) {
       //TODO : 置いた石の右側だけ調べてみる
@@ -53,13 +59,17 @@ export default {
       for(let i = 1; i < this.size - xIndex; i++) {
  
         if(this.stones[yIndex][xIndex + i] != this.stones[yIndex][xIndex]) {
-          reverseStones.push(this.stones[yIndex][xIndex + i]);
+          reverseStones.push(yIndex,xIndex + i);
         }else{
           break;
         }
       }
       console.log(reverseStones);
+    },
+    getCurrentStone: function() {
+      return this.turn % 2 !== 0 ? -1 : 1;
     }
+
   },
   created: function() {
     const stones = [];
