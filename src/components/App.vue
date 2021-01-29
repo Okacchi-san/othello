@@ -33,33 +33,12 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.changeStone(yIndex,xIndex);
+      this.changeStone(this.size,yIndex,xIndex,1,0); //右側チェック
+      this.changeStone(0, yIndex,xIndex,-1,1); // 左側チェック
       this.turn ++;
     },
-    changeStone: function(yIndex,xIndex) {
-      //TODO : 置いた石の右側だけ調べてみるを流用して、左の石を調べてみる
-      
-      // let reverseStones = [];
-      // let flug = false;
-
-      // for(let i = 1; i < this.size - xIndex; i++) {
-      //   if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
-      //     reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
-      //   }else{
-      //     flug = true;
-      //     break;
-      //   }
-      // }
-      this.checkReverseStone(this.size,yIndex,xIndex,1,0); //右側チェック
-      this.checkReverseStone(0, yIndex,xIndex,-1,1); // 左側チェック
-      
-      // if(this.flug) {
-      //   this.reverseStones.map(i => {
-      //     this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
-      //   })
-      // }
-    },
-    checkReverseStone: function(size,yIndex,xIndex,moveLine,init) {
+    
+    changeStone: function(size,yIndex,xIndex,moveLine,init) {
       let reverseStones = [];
       let flug = false;
       
