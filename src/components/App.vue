@@ -19,7 +19,9 @@ export default {
     return {
       size: 8,
       stones: [],
-      turn: 1 //
+      turn: 1,
+      // flug:'',
+      // reverseStones:[],
     }
   },
   methods: {
@@ -29,41 +31,59 @@ export default {
         //ガード説
         return;
       }
-        
-        this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-        this.changeStone(yIndex,xIndex);
-        this.turn ++;
-        // console.log(this.stones,this.turn)
-        // console.log(yIndex,xIndex)
-      
+
+      this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
+      this.changeStone(yIndex,xIndex);
+      this.turn ++;
     },
     changeStone: function(yIndex,xIndex) {
-      //TODO : 置いた石の右側だけ調べてみる
-      // 右側に石がなく、番外に出た　何もしない
-      // 右側が相手の石　石の座標を配列に格納　
-      // 右側が自石　配列の長さが1以上の場合、配列の石を裏返す
+      //TODO : 置いた石の右側だけ調べてみるを流用して、左の石を調べてみる
+      
+      // let reverseStones = [];
+      // let flug = false;
+
+      // for(let i = 1; i < this.size - xIndex; i++) {
+      //   if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
+      //     reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
+      //   }else{
+      //     flug = true;
+      //     break;
+      //   }
+      // }
+      this.checkReverseStone(this.size,yIndex,xIndex,1,0); //右側チェック
+      this.checkReverseStone(0, yIndex,xIndex,-1,1); // 左側チェック
+      
+      // if(this.flug) {
+      //   this.reverseStones.map(i => {
+      //     this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
+      //   })
+      // }
+    },
+    checkReverseStone: function(size,yIndex,xIndex,moveLine,init) {
       let reverseStones = [];
       let flug = false;
-      for(let i = 1; i < this.size - xIndex; i++) {
- 
-        if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
-          reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
-        }else{
-          flug = true;
-          break;
+      
+        for(let i = 1; i < size - xIndex * moveLine + init; i++) {
+          if(this.stones[yIndex][xIndex + i * moveLine] !== this.getCurrentStone()) {
+            reverseStones.push({yIndex : yIndex, xIndex : xIndex + i * moveLine});
+          }else{
+            flug = true;
+            break;
+          }
         }
-      }
+      
+      console.log(flug,reverseStones)
+      
+      
       if(flug) {
         reverseStones.map(i => {
-
-          this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
+          return this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
         })
       }
     },
     getCurrentStone: function() {
       return this.turn % 2 !== 0 ? -1 : 1;
     }
-
   },
   created: function() {
     const stones = [];
