@@ -30,33 +30,28 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.changeStoneRight(xIndex, yIndex);
+      this.changeStoneRight(yIndex, xIndex);
       this.turn++;
     },
     getCurrentStone: function() {
       return this.turn % 2 !== 0 ? -1 : 1;
     },
-  },
-  changeStoneRight: function(yIndex, xIndex) {
-    let reverseStones = [];
-    let flug = false;
+    changeStoneRight: function(yIndex, xIndex) {
+      let isExist = false;
+      let rightStonePosition = [0, 0];
 
-    for (let i = 1; i < this.size - xIndex; i++) {
-      if (this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
-        reverseStones.push({ yIndex: yIndex, xIndex: xIndex + i });
-      } else if (this.stones[yIndex][xIndex + i] === 0) {
-        break;
-      } else {
-        flug = true;
-        break;
+      for (let i = 2; i < this.size - xIndex; i++) {
+        if (this.stones[yIndex][xIndex + i] === this.getCurrentStone()) {
+          isExist = true;
+          rightStonePosition = [yIndex, xIndex + i]
+          break;
+        }
       }
-    }
 
-    if (flug) {
-      reverseStones.map(i => {
-        return this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
-      });
-    }
+      if (isExist) {
+        console.log(rightStonePosition)
+      }
+    },
   },
   created: function() {
     let stones = [];
@@ -68,7 +63,6 @@ export default {
       stones.push(row);
     }
     this.stones = stones;
-    console.log(this.stones);
   },
 };
 </script>
