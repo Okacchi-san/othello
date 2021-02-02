@@ -43,11 +43,11 @@ export default {
       let flug = false;
       
         for(let i = 1; i < this.size - xIndex ; i++) {
+          if(this.stones[yIndex][xIndex + 1] === 0) {
+            break;
+          }
           if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
             reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
-          }else if(this.stones[yIndex][xIndex + i] === 0){
-            
-            break;
           }else{
             flug = true;
             break;
