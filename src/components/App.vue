@@ -20,72 +20,18 @@ export default {
       size: 8,
       stones: [],
       turn: 1,
-      // flug:'',
-      // reverseStones:[],
     }
   },
   methods: {
     onSelect: function(yIndex,xIndex) {
       if(this.stones[yIndex][xIndex] !== 0) {
         alert('すでに石が置かれています。');
-        //ガード説
         return;
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.changeStoneRight(yIndex,xIndex); //右側チェック
-      // this.changeStoneLeft(yIndex,xIndex); // 左側チェック
       this.turn ++;
     },
-    
-    changeStoneRight: function(yIndex,xIndex) {
-      let reverseStones = [];
-      let flug = false;
-      
-        for(let i = 1; i < this.size - xIndex ; i++) {
-          if(this.stones[yIndex][xIndex + i] !== this.getCurrentStone()) {
-            reverseStones.push({yIndex : yIndex, xIndex : xIndex + i});
-          }else if(this.stones[yIndex][xIndex + i] === 0){
-            
-            break;
-          }else{
-            flug = true;
-            break;
-          }
-        }
-
-      if(flug) {
-        reverseStones.map(i => {
-          return this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
-        })
-      }
-    },
-
-    // changeStoneLeft: function(yIndex,xIndex) {
-    //   let reverseStones = [];
-    //   let flug = false;
-    //   console.log(xIndex)
-    //     for(let i = xIndex - 1; i < xIndex - 1 ; i--) {
-
-    //       if(this.stones[yIndex][xIndex - i] !== this.getCurrentStone()) {
-    //         reverseStones.push({yIndex : yIndex, xIndex : xIndex - i});
-    //         console.log(reverseStones)
-    //       }else{
-    //         flug = true;
-    //         break;
-    //       }
-    //     }
-
-    //   if(flug) {
-    //     reverseStones.map(i => {
-    //       return this.stones[i.yIndex].splice(i.xIndex, 1, this.getCurrentStone());
-    //     })
-    //   }
-    // },
-
-
-
-
     getCurrentStone: function() {
       return this.turn % 2 !== 0 ? -1 : 1;
     }
