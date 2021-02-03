@@ -30,12 +30,6 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-<<<<<<< HEAD
-      this.turn++;
-    },
-    getCurrentStone: function() {
-      return this.turn % 2 !== 0 ? -1 : 1;
-=======
       this.changeStoneRight(yIndex, xIndex);
       this.turn++;
     },
@@ -81,7 +75,6 @@ export default {
           }
         }
       }
->>>>>>> changeStoneRight
     },
   },
   created: function() {
@@ -94,10 +87,6 @@ export default {
       stones.push(row);
     }
     this.stones = stones;
-<<<<<<< HEAD
-    console.log(this.stones);
-=======
->>>>>>> changeStoneRight
   },
 };
 </script>
