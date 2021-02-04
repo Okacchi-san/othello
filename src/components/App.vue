@@ -30,11 +30,11 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      // this.changeStoneRight(yIndex, xIndex);
-      // this.changeStoneLeft(yIndex, xIndex);
-      // this.changeStoneTop(yIndex, xIndex);
-      // this.changeStoneBottom(yIndex, xIndex);
-      // this.changeStoneDiagonalRightBottom(yIndex, xIndex);
+      this.changeStoneRight(yIndex, xIndex);
+      this.changeStoneLeft(yIndex, xIndex);
+      this.changeStoneTop(yIndex, xIndex);
+      this.changeStoneBottom(yIndex, xIndex);
+      this.changeStoneDiagonalRightBottom(yIndex, xIndex);
       this.changeStoneDiagonalRightTop(yIndex, xIndex);
       this.turn++;
     },
