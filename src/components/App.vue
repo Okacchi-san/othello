@@ -30,10 +30,11 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.changeStoneRight(yIndex, xIndex);
-      this.changeStoneLeft(yIndex, xIndex);
-      this.changeStoneTop(yIndex, xIndex);
-      this.changeStoneBottom(yIndex, xIndex);
+      // this.changeStoneRight(yIndex, xIndex);
+      // this.changeStoneLeft(yIndex, xIndex);
+      // this.changeStoneTop(yIndex, xIndex);
+      // this.changeStoneBottom(yIndex, xIndex);
+      this.changeStoneDiagonalRightBottom(yIndex, xIndex);
       this.turn++;
     },
     getCurrentStone: function() {
@@ -160,7 +161,6 @@ export default {
         }
       }
     },
-
     changeStoneBottom: function(yIndex, xIndex) {
       let isExist = false;
       let bottomStonePosition = {yIndex,xIndex};
@@ -201,6 +201,46 @@ export default {
         }
       }
     },
+    changeStoneDiagonalRightBottom: function(yIndex, xIndex) {
+      let isExist = false;
+      let diagonalRightBottomStonePosition = {yIndex,xIndex};
+
+      for (let i = 2; i < this.size - yIndex; i++) { //this.size - xIndex、yIndex < this.sizeではエラー
+        if (xIndex < this.size && this.stones[yIndex + i][xIndex + i] === this.getCurrentStone()) {
+          isExist = true;
+          diagonalRightBottomStonePosition.yIndex = yIndex + i;
+          diagonalRightBottomStonePosition.xIndex = xIndex + i;
+          break;
+        }
+      }
+      // console.log(diagonalRightBottomStonePosition,isExist)
+      if (isExist) {
+        let reverseStones = [];
+        let stoneLength = diagonalRightBottomStonePosition.xIndex - xIndex;
+      
+        for(let i = 1; i < stoneLength; i++) {
+          let reverseStone = {yIndex,xIndex};
+
+          if(this.stones[yIndex + i][xIndex + i] !== this.getCurrentStone()) {
+            if(this.stones[yIndex + i][xIndex + i] === 0) {
+              break;
+            }else{
+              reverseStone.yIndex = yIndex + i;
+              reverseStone.xIndex = xIndex + i;
+            }
+          }
+          reverseStones.push(reverseStone);
+        }
+
+        let reverseStonesLength = Object.keys(reverseStones).length;
+
+        if(stoneLength - 1 === reverseStonesLength) {
+          for(let i = 0; i < reverseStonesLength; i++) {
+            this.stones[reverseStones[i].yIndex].splice(reverseStones[i].xIndex, 1 ,this.getCurrentStone());
+          }
+        }
+      }
+    }
   },
   created: function() {
     let stones = [];
