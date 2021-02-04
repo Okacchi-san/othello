@@ -30,10 +30,10 @@ export default {
       }
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      // this.changeStoneRight(yIndex, xIndex);
-      // this.changeStoneLeft(yIndex, xIndex);
-      // this.changeStoneTop(yIndex, xIndex);
-      // this.changeStoneBottom(yIndex, xIndex);
+      this.changeStoneRight(yIndex, xIndex);
+      this.changeStoneLeft(yIndex, xIndex);
+      this.changeStoneTop(yIndex, xIndex);
+      this.changeStoneBottom(yIndex, xIndex);
       this.changeStoneDiagonalRightBottom(yIndex, xIndex);
       this.turn++;
     },
@@ -213,7 +213,7 @@ export default {
           break;
         }
       }
-      // console.log(diagonalRightBottomStonePosition,isExist)
+      
       if (isExist) {
         let reverseStones = [];
         let stoneLength = diagonalRightBottomStonePosition.xIndex - xIndex;
