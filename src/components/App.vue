@@ -20,6 +20,9 @@ export default {
       size: 8,
       stones: [],
       turn: 1,
+      directions: [
+        [0, 1],[0, -1],[1, 0],[-1, 0],[1, 1],[-1, 1],[1, -1],[-1, -1],
+      ],
     };
   },
   methods: {
@@ -29,14 +32,12 @@ export default {
         return;
       }
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.changeStone(yIndex, xIndex , 0 , 1);  //右
-      this.changeStone(yIndex, xIndex , 0 , -1);  //左
-      this.changeStone(yIndex, xIndex , 1 , 0);  //下
-      this.changeStone(yIndex, xIndex , -1 , 0);  //上
-      this.changeStone(yIndex, xIndex , 1 , 1);  //右下
-      this.changeStone(yIndex, xIndex , -1 , 1);  //右上
-      this.changeStone(yIndex, xIndex , 1 , -1);  //左下
-      this.changeStone(yIndex, xIndex , -1 , -1);  //左上
+      this.directions.map(direction => {
+        let yDirection = direction[0];
+        let xDirection = direction[1];
+        this.changeStone(yIndex, xIndex , yDirection , xDirection)
+      });
+
       this.turn++;
     },
     getCurrentStone: function() {
