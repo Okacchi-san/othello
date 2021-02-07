@@ -28,7 +28,6 @@ export default {
         alert('すでに石が置かれています。');
         return;
       }
-
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
       this.changeStone(yIndex, xIndex , 0 , 1);  //右
       this.changeStone(yIndex, xIndex , 0 , -1);  //左
@@ -43,9 +42,9 @@ export default {
     getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
     },
-    changeStone: function(yIndex, xIndex, yDirection,xDirection) {
+    changeStone: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
-      let stonePosition = {yIndex,xIndex};
+      let stonePosition = {yIndex, xIndex};
 
       for (let i = 2; i < this.size; i++) {
         const newYindex = yIndex + (i * yDirection);
@@ -55,7 +54,7 @@ export default {
            newXindex < 0 || newXindex > this.size - 1) {
              break;
            }
-// console.log(newXindex)
+
         if (this.stones[newYindex][newXindex] === this.getCurrentStone()) {
           isExist = true;
           stonePosition.yIndex = newYindex;
@@ -63,17 +62,17 @@ export default {
           break;
         }
       }
-// console.log(rightStonePosition,isExist)
+
       if (isExist) {
         let reverseStones = [];
         let stoneLength = 
           !(yDirection) ? (stonePosition.xIndex - xIndex) * xDirection
           :(stonePosition.yIndex - yIndex) * yDirection;
-      // console.log(stoneLength)
+
         for(let i = 1; i < stoneLength; i++) {
           const newYindex = yIndex + (i * yDirection);
           const newXindex = xIndex + (i * xDirection);
-          let reverseStone = {yIndex,xIndex};
+          let reverseStone = {yIndex, xIndex};
 
           if(this.stones[newYindex][newXindex] !== this.getCurrentStone()) {
             if(this.stones[newYindex][newXindex] === 0) {
@@ -85,7 +84,7 @@ export default {
           }
           reverseStones.push(reverseStone);
         }
-// console.log(reverseStones)
+
         let reverseStonesLength = Object.keys(reverseStones).length;
 
         if(stoneLength - 1 === reverseStonesLength) {
