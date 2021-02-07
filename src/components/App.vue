@@ -31,8 +31,8 @@ export default {
 
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
       // this.changeStoneRight(yIndex, xIndex, 0, 1);
-      this.changeStoneLeft(yIndex, xIndex, 0, -1);
-      // this.changeStoneTop(yIndex, xIndex);
+      // this.changeStoneLeft(yIndex, xIndex, 0, -1);
+      this.changeStoneTop(yIndex, xIndex, -1, 0);
       // this.changeStoneBottom(yIndex, xIndex);
       // this.changeStoneDiagonalRightBottom(yIndex, xIndex);
       // this.changeStoneDiagonalRightTop(yIndex, xIndex);
@@ -141,32 +141,43 @@ export default {
         }
       }
     },
-    changeStoneTop: function(yIndex, xIndex) {
+    changeStoneTop: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
       let topStonePosition = {yIndex,xIndex};
 
-      for (let i = yIndex -2; i >= 0; i--) {
-        if (this.stones[i][xIndex] === this.getCurrentStone()) {
+      for (let i = 2; i < this.size; i++) {
+        const newYindex = yIndex + (i * yDirection);
+        const newXindex = xIndex + (i * xDirection);
+
+        if(newYindex < 0 || newYindex > this.size ||
+           newXindex < 0 || newXindex > this.size) {
+             break;
+           }
+
+        if (this.stones[newYindex][newXindex] === this.getCurrentStone()) {
           isExist = true;
-          topStonePosition.yIndex = i;
-          topStonePosition.xIndex = xIndex;
+          topStonePosition.yIndex = newYindex;
+          topStonePosition.xIndex = newXindex;
           break;
         }
       }
-      
+     
       if (isExist) {
         let reverseStones = [];
-        let stoneLength = -topStonePosition.yIndex + yIndex;
+        // TODO: stoneLengthの場合分け
+        let stoneLength = (topStonePosition.yIndex - yIndex) * yDirection;
       
         for(let i = 1; i < stoneLength; i++) {
+          const newYindex = yIndex + (i * yDirection);
+          const newXindex = xIndex + (i * xDirection);
           let reverseStone = {yIndex,xIndex};
 
-          if(this.stones[yIndex - i][xIndex] !== this.getCurrentStone()) {
-            if(this.stones[yIndex - i][xIndex] === 0) {
+          if(this.stones[newYindex][newXindex] !== this.getCurrentStone()) {
+            if(this.stones[newYindex][newXindex] === 0) {
               break;
             }else{
-              reverseStone.yIndex = yIndex - i;
-              reverseStone.xIndex = xIndex;
+              reverseStone.yIndex = newYindex;
+              reverseStone.xIndex = newXindex;
             }
           }
           reverseStones.push(reverseStone);
