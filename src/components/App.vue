@@ -39,7 +39,8 @@ export default {
       });
 
       this.turn++;
-      console.log(this.countStone());
+      // console.log(this.countStone().black);
+      this.checkWinner();
     },
     getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
@@ -114,7 +115,13 @@ export default {
       return counts;
     },
     checkWinner: function() {
-
+      if(this.turn === Math.pow(2,2) + 1) {
+        console.log(
+        this.countStone().black > this.countStone().white ? '黒の勝ちです': 
+        this.countStone().black === this.countStone().white ? '引き分けです':
+        '白の勝ちです'
+        )
+      }
     }
   },
   created: function() {
