@@ -39,6 +39,7 @@ export default {
       });
 
       this.turn++;
+      console.log(this.checkStone());
     },
     getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
@@ -94,8 +95,28 @@ export default {
           }
         }
       }
+    },
+    checkStone: function() {
+      let counts = {
+        black: 0,
+        white: 0,
+      }
+
+      for (let y = 0; y < this.size; y++) {
+        for (let x = 0; x < this.size; x++) {
+          if(this.stones[y][x] === -1) {
+            counts.black++;
+          }else if(this.stones[y][x] === 1) {
+            counts.white++;
+          }
+        } 
+      }
+      return counts;
+    },
+    checkWinner: function() {
+      
     }
-  },  
+  },
   created: function() {
     let stones = [];
     for (let y = 0; y < this.size; y++) {
