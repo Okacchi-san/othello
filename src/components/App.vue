@@ -39,7 +39,7 @@ export default {
       });
 
       this.turn++;
-      console.log(this.checkStone());
+      console.log(this.countStone());
     },
     getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
@@ -96,7 +96,7 @@ export default {
         }
       }
     },
-    checkStone: function() {
+    countStone: function() {
       let counts = {
         black: 0,
         white: 0,
@@ -114,7 +114,7 @@ export default {
       return counts;
     },
     checkWinner: function() {
-      
+
     }
   },
   created: function() {
