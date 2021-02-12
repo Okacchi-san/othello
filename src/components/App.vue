@@ -2,11 +2,7 @@
   <div>
     <table>
       <tr v-for="(y, yIndex) of stones" :key="yIndex">
-        <td
-          v-for="(x, xIndex) of stones"
-          :key="xIndex"
-          v-on:click="onSelect(yIndex, xIndex)"
-        >
+        <td v-for="(x, xIndex) of stones" :key="xIndex" v-on:click="onSelect(yIndex, xIndex)">
           <Stone :type="stones[yIndex][xIndex]"></Stone>
         </td>
       </tr>
@@ -15,13 +11,13 @@
 </template>
 
 <script>
-import Stone from "./Stone.vue";
+import Stone from './Stone.vue';
 
 export default {
   components: { Stone },
-  data: function () {
+  data: function() {
     return {
-      size: 8,
+      size: 6,
       stones: [],
       turn: 1,
       directions: [
@@ -37,13 +33,13 @@ export default {
     };
   },
   methods: {
-    onSelect: function (yIndex, xIndex) {
+    onSelect: function(yIndex, xIndex) {
       if (this.stones[yIndex][xIndex] !== 0) {
-        alert("すでに石が置かれています。");
+        alert('すでに石が置かれています。');
         return;
       }
       this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-      this.directions.map((direction) => {
+      this.directions.map(direction => {
         let yDirection = direction[0];
         let xDirection = direction[1];
         this.changeStone(yIndex, xIndex, yDirection, xDirection);
@@ -53,10 +49,10 @@ export default {
       // console.log(this.countStone().black);
       this.checkWinner();
     },
-    getCurrentStone: function () {
+    getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
     },
-    changeStone: function (yIndex, xIndex, yDirection, xDirection) {
+    changeStone: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
       let stonePosition = { yIndex, xIndex };
       const returnStones = [];
@@ -66,12 +62,7 @@ export default {
         const newYindex = yIndex + i * yDirection;
         const newXindex = xIndex + i * xDirection;
 
-        if (
-          newYindex < 0 ||
-          newYindex > this.size - 1 ||
-          newXindex < 0 ||
-          newXindex > this.size - 1
-        ) {
+        if (newYindex < 0 || newYindex > this.size - 1 || newXindex < 0 || newXindex > this.size - 1) {
           break;
         }
 
@@ -88,14 +79,14 @@ export default {
         gap++;
       }
 
-      if (isExist && returnStones.length === gap){
+      if (isExist && returnStones.length === gap) {
         returnStones.map(returnStone => {
           this.stones[returnStone.yIndex].splice(returnStone.xIndex, 1, this.getCurrentStone());
         });
         return;
       }
     },
-    countStone: function () {
+    countStone: function() {
       let counts = {
         black: 0,
         white: 0,
@@ -112,28 +103,52 @@ export default {
       }
       return counts;
     },
-    checkWinner: function () {
-      if (this.turn === Math.pow(3, 2) + 1) {
-        console.log(
-          this.countStone().black > this.countStone().white
-            ? "黒の勝ちです"
-            : this.countStone().black === this.countStone().white
-            ? "引き分けです"
-            : "白の勝ちです"
-        );
+    checkWinner: function() {
+      if (this.turn === this.size ** 2 + 1) {
+        const counts = this.countStone();
+        if (counts.black === counts.white) {
+          console.log('draw');
+          return;
+        }
+        const winner = counts.black > counts.white ? '黒' : '白';
+
+        console.log(`${winner}の勝ちです`);
       }
     },
-  },
-  created: function () {
-    let stones = [];
-    for (let y = 0; y < this.size; y++) {
-      let row = [];
-      for (let x = 0; x < this.size; x++) {
-        row.push(0);
+    createBoard: function() {
+      if (this.size < 2 || this.size % 2 !== 0) {
+        throw new Error('だめ');
       }
-      stones.push(row);
+
+      let stones = [];
+      for (let y = 0; y < this.size; y++) {
+        let row = [];
+        for (let x = 0; x < this.size; x++) {
+          row.push(0);
+        }
+        stones.push(row);
+      }
+
+      const base = this.size / 2 - 1;
+      for (let y = 0; y < 2; y++) {
+        for (let x = 0; x < 2; x++) {
+          if (x === y) {
+            stones[y + base][x + base] = 1;
+          } else {
+            stones[y + base][x + base] = -1;
+          }
+        }
+      }
+
+      this.stones = stones;
+    },
+  },
+  created: function() {
+    try {
+      this.createBoard();
+    } catch (e) {
+      console.log(e.message);
     }
-    this.stones = stones;
   },
 };
 </script>
