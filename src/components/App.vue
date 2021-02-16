@@ -40,18 +40,24 @@ export default {
       }
 
       //隣が相手の石で、かつ自石と挟めてひっくり返せる場合、石が置ける
+      let flag = false;
       this.directions.map(direction => {
-        let yDirection = direction[0];
-        let xDirection = direction[1];
+        const yDirection = direction[0];
+        const xDirection = direction[1];
 
-        let checkNextStones = this.checkNextStone(yIndex, xIndex, yDirection, xDirection);
-        
-        if(checkNextStones) {
+        const canPutStone = this.checkNextStone(yIndex, xIndex, yDirection, xDirection);
+
+        if(canPutStone) {
+          flag = true;
           this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
           this.changeStone(yIndex, xIndex, yDirection, xDirection);
           this.turn++;
         }
       });
+
+      if (!flag) {
+        console.log('置けません')
+      }
 
       this.checkWinner();
     },
@@ -60,7 +66,7 @@ export default {
     },
     changeStone: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
-      let stonePosition = { yIndex, xIndex };
+      const stonePosition = { yIndex, xIndex };
       const returnStones = [];
       let gap = 0;
 
@@ -93,7 +99,7 @@ export default {
       }
     },
     countStone: function() {
-      let counts = {
+      const counts = {
         black: 0,
         white: 0,
       };
@@ -126,9 +132,9 @@ export default {
         throw new Error('だめ');
       }
 
-      let stones = [];
+      const stones = [];
       for (let y = 0; y < this.size; y++) {
-        let row = [];
+        const row = [];
         for (let x = 0; x < this.size; x++) {
           row.push(0);
         }
@@ -150,10 +156,9 @@ export default {
     },
     checkNextStone: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
-      let stonePosition = { yIndex, xIndex };
+      const stonePosition = { yIndex, xIndex };
       const returnStones = [];
       let gap = 0;
-      let returnOK = false;
 
       for (let i = 1; i < this.size; i++) {
         const newYindex = yIndex + i * yDirection;
@@ -176,15 +181,8 @@ export default {
         gap++;
       }
 
-      if (isExist && returnStones.length === gap && gap != 0) {
-        // this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-        returnOK = true;
-        return returnOK;
-        // console.log('OK')
-      } else {
-        return returnOK;
-        // console.log('他の場所に置いてください。')
-      }
+      const result = isExist && returnStones.length === gap && gap !== 0;
+      return result;
     },
   },
   created: function() {
