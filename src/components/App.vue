@@ -40,6 +40,7 @@ export default {
       }
 
       //隣が相手の石で、かつ自石と挟めてひっくり返せる場合、石が置ける
+      console.log('OK');
       let flag = false;
       this.directions.map(direction => {
         const yDirection = direction[0];
