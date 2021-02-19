@@ -17,7 +17,7 @@ export default {
   components: { Stone },
   data: function() {
     return {
-      size: 4,
+      size: 8,
       stones: [],
       turn: 1,
       directions: [
@@ -39,15 +39,14 @@ export default {
         return;
       }
 
-      //隣が相手の石で、かつ自石と挟めてひっくり返せる場合、石が置ける
-      console.log('OK');
       let flag = false;
       this.directions.map(direction => {
         const yDirection = direction[0];
         const xDirection = direction[1];
 
-        const canPutStone = this.checkNextStone(yIndex, xIndex, yDirection, xDirection);
-
+        const checkPutStone = this.checkNextStone(yIndex, xIndex, yDirection, xDirection);
+        const canPutStone = checkPutStone.isExist && checkPutStone.returnStones.length === checkPutStone.gap && checkPutStone.gap !== 0;
+     
         if(canPutStone) {
           flag = true;
           this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
@@ -66,6 +65,40 @@ export default {
       return this.turn % 2 ? -1 : 1;
     },
     changeStone: function(yIndex, xIndex, yDirection, xDirection) {
+      let isExist = false;
+      const stonePosition = { yIndex, xIndex };
+      const returnStones = [];
+      let gap = 0;
+
+      for (let i = 1; i < this.size; i++) {
+        const newYindex = yIndex + i * yDirection;
+        const newXindex = xIndex + i * xDirection;
+
+        if (newYindex < 0 || newYindex > this.size - 1 || newXindex < 0 || newXindex > this.size - 1) {
+          break;
+        }
+
+        if (this.stones[newYindex][newXindex] === this.getCurrentStone()) {
+          isExist = true;
+          stonePosition.yIndex = newYindex;
+          stonePosition.xIndex = newXindex;
+          break;
+        }
+
+        if (this.stones[newYindex][newXindex] !== 0) {
+          returnStones.push({ yIndex: newYindex, xIndex: newXindex });
+        }
+        gap++;
+      }
+
+      if (isExist && returnStones.length === gap) {
+        returnStones.map(returnStone => {
+          this.stones[returnStone.yIndex].splice(returnStone.xIndex, 1, this.getCurrentStone());
+        });
+        return;
+      }
+    },
+    changeStones: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
       const stonePosition = { yIndex, xIndex };
       const returnStones = [];
@@ -182,7 +215,11 @@ export default {
         gap++;
       }
 
-      const result = isExist && returnStones.length === gap && gap !== 0;
+      const result = {
+        isExist: isExist,
+        returnStones: returnStones,
+        gap: gap
+      }
       return result;
     },
   },
