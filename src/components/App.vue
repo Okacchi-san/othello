@@ -30,6 +30,8 @@ export default {
         [1, -1],
         [-1, -1],
       ],
+      notPutCount: 0,
+      notPutCor: [],
     };
   },
   methods: {
@@ -39,25 +41,28 @@ export default {
         return;
       }
 
-      //隣が相手の石で、かつ自石と挟めてひっくり返せる場合、石が置ける
-      console.log('OK');
       let flag = false;
       this.directions.map(direction => {
         const yDirection = direction[0];
         const xDirection = direction[1];
 
-        const canPutStone = this.checkNextStone(yIndex, xIndex, yDirection, xDirection);
+        const returnStones = this.getReversibleStones(yIndex, xIndex, yDirection, xDirection);
 
-        if(canPutStone) {
+        if (returnStones.length) {
           flag = true;
+          //自石を置く
           this.stones[yIndex].splice(xIndex, 1, this.getCurrentStone());
-          this.changeStone(yIndex, xIndex, yDirection, xDirection);
+          //挟んだ相手の石をひっくり返す
+          returnStones.map(returnStone => {
+            this.stones[returnStone.yIndex].splice(returnStone.xIndex, 1, this.getCurrentStone());
+          });
+
           this.turn++;
         }
       });
 
       if (!flag) {
-        console.log('置けません')
+        this.checkPossiblePutStone(yIndex, xIndex);
       }
 
       this.checkWinner();
@@ -65,44 +70,11 @@ export default {
     getCurrentStone: function() {
       return this.turn % 2 ? -1 : 1;
     },
-    changeStone: function(yIndex, xIndex, yDirection, xDirection) {
-      let isExist = false;
-      const stonePosition = { yIndex, xIndex };
-      const returnStones = [];
-      let gap = 0;
-
-      for (let i = 1; i < this.size; i++) {
-        const newYindex = yIndex + i * yDirection;
-        const newXindex = xIndex + i * xDirection;
-
-        if (newYindex < 0 || newYindex > this.size - 1 || newXindex < 0 || newXindex > this.size - 1) {
-          break;
-        }
-
-        if (this.stones[newYindex][newXindex] === this.getCurrentStone()) {
-          isExist = true;
-          stonePosition.yIndex = newYindex;
-          stonePosition.xIndex = newXindex;
-          break;
-        }
-
-        if (this.stones[newYindex][newXindex] !== 0) {
-          returnStones.push({ yIndex: newYindex, xIndex: newXindex });
-        }
-        gap++;
-      }
-
-      if (isExist && returnStones.length === gap) {
-        returnStones.map(returnStone => {
-          this.stones[returnStone.yIndex].splice(returnStone.xIndex, 1, this.getCurrentStone());
-        });
-        return;
-      }
-    },
     countStone: function() {
       const counts = {
         black: 0,
         white: 0,
+        empty: 0,
       };
 
       for (let y = 0; y < this.size; y++) {
@@ -111,6 +83,8 @@ export default {
             counts.black++;
           } else if (this.stones[y][x] === 1) {
             counts.white++;
+          } else {
+            counts.empty++;
           }
         }
       }
@@ -155,7 +129,7 @@ export default {
 
       this.stones = stones;
     },
-    checkNextStone: function(yIndex, xIndex, yDirection, xDirection) {
+    getReversibleStones: function(yIndex, xIndex, yDirection, xDirection) {
       let isExist = false;
       const stonePosition = { yIndex, xIndex };
       const returnStones = [];
@@ -181,9 +155,27 @@ export default {
         }
         gap++;
       }
+      if (gap !== returnStones.length || !isExist) {
+        return [];
+      }
 
-      const result = isExist && returnStones.length === gap && gap !== 0;
-      return result;
+      return returnStones;
+    },
+    checkPossiblePutStone: function(y, x) {
+      const counts = this.countStone();
+      const winner = this.getCurrentStone() !== -1 ? '黒' : '白';
+      const loser = this.getCurrentStone() === -1 ? '黒' : '白';
+
+      if (counts.empty === this.notPutCount) {
+        console.log(`${loser}が置けなくなりました。${winner}の勝ちです。`);
+      }
+
+      if (!this.notPutCor.some(n => n.x === x && n.y === y)) {
+        this.notPutCor.push({ y, x });
+        this.notPutCount++;
+      }
+
+      console.log('ここには置けません。他の場所を探してください。');
     },
   },
   created: function() {
